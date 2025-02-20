@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wwdropdown/src/model/ww_item.dart';
+import 'package:wwdropdown/src/utils/_controller_debouncer.dart';
 import 'package:wwdropdown/src/utils/_type_def.dart';
 
 class WWOverlayViewApi extends StatefulWidget {
@@ -8,7 +9,7 @@ class WWOverlayViewApi extends StatefulWidget {
   final int apiLimitCount;
   final TextStyle? itemTextStyle;
   final WWDropDownItemSelect onSelect;
-  final List<WWDropdownItem> selectedItem;
+  final List<WWDropdownItem> selectedItems;
 
   const WWOverlayViewApi(
       {super.key,
@@ -17,14 +18,15 @@ class WWOverlayViewApi extends StatefulWidget {
       required this.onSelect,
       required this.api,
       this.apiLimitCount = 10,
-      required this.selectedItem});
+      required this.selectedItems});
 
   @override
   State<WWOverlayViewApi> createState() => _WWOverlayViewState();
 }
 
 class _WWOverlayViewState extends State<WWOverlayViewApi> {
-  TextEditingController searchController = TextEditingController();
+  late TextEditingController searchController =
+      DebouncedTextEditingController(onDebounced: _onSearch);
   bool isFullyLoaded = false;
   List<WWDropdownItem> items = [];
   bool isLoading = false;
@@ -34,6 +36,12 @@ class _WWOverlayViewState extends State<WWOverlayViewApi> {
     searchController.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  Future<void> _onSearch(String value) async {
+    items.clear();
+    isFullyLoaded = false;
+    load();
   }
 
   void _onScroll() {
@@ -62,6 +70,21 @@ class _WWOverlayViewState extends State<WWOverlayViewApi> {
     super.initState();
   }
 
+  void onTap(WWDropdownItem item) {
+    var index = widget.selectedItems.indexWhere(
+      (element) => element.value == item.value,
+    );
+    if (index != -1) {
+      var d = widget.selectedItems;
+      d.removeAt(index);
+      widget.onSelect(d);
+    } else {
+      var d = widget.selectedItems;
+      d.add(item);
+      widget.onSelect(d);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -79,20 +102,27 @@ class _WWOverlayViewState extends State<WWOverlayViewApi> {
           itemCount: items.length,
           itemBuilder: (context, index) {
             var item = items[index];
-            return Row(
-              children: [
-                Checkbox(
-                  value: widget.selectedItem.contains(item),
-                  onChanged: (value) {},
-                ),
-                const SizedBox(
-                  width: 7,
-                ),
-                Text(
-                  items[index].label,
-                  style: widget.itemTextStyle,
-                )
-              ],
+            return InkWell(
+              onTap: () {
+                onTap(item);
+              },
+              child: Row(
+                children: [
+                  Checkbox(
+                    value: widget.selectedItems.contains(item),
+                    onChanged: (value) {
+                      onTap(item);
+                    },
+                  ),
+                  const SizedBox(
+                    width: 7,
+                  ),
+                  Text(
+                    items[index].label,
+                    style: widget.itemTextStyle,
+                  )
+                ],
+              ),
             );
           },
         ))

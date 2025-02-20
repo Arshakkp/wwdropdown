@@ -1,5 +1,3 @@
-import 'package:flutter/widgets.dart';
-
 class WWDropdownItem<T extends Object> {
   final String label;
   T value;
