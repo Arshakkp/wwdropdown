@@ -10,23 +10,33 @@ class WWDropdown extends StatefulWidget {
   final double maxPopViewHeight;
   final ShapeBorder? popUpShape;
   final int apiLimitCount;
+  final String? hintText;
+  final bool isSingleSelect;
   final TextStyle? itemTextStyle;
   final InputDecoration? searchDecoration;
-  final List<WWDropdownItem> selectedItems;
-  final Function(List<WWDropdownItem> items) onSelect;
-  final InputDecoration? decoration;
+  final WWDropdownItem? selectedItem;
+  final TextStyle? style;
+  final EdgeInsetsGeometry? padding;
+  final TextStyle? hintStyle;
+  final WWDropDownItemSelect onSelect;
+  final Decoration? decoration;
   final WWDropdownApi api;
   const WWDropdown(
       {super.key,
       this.elevation = 2,
+      this.isSingleSelect = false,
       required this.api,
       this.itemTextStyle,
       this.decoration,
+      this.hintStyle,
+      this.style,
+      this.padding,
       required this.onSelect,
       this.searchDecoration,
       this.apiLimitCount = 10,
+      this.hintText,
       this.maxPopViewHeight = 200,
-      required this.selectedItems,
+      required this.selectedItem,
       this.popUpShape});
 
   @override
@@ -38,16 +48,13 @@ class _WWDropdownState extends State<WWDropdown> {
   final LayerLink link = LayerLink();
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      key: key,
-      readOnly: true,
-      decoration: widget.decoration,
+    return InkWell(
       onTap: () {
         showWWDropItemOverlayApi(key,
             child: WWOverlayViewApi(
               api: widget.api,
               onSelect: widget.onSelect,
-              selectedItems: widget.selectedItems,
+              selectedItem: widget.selectedItem,
               apiLimitCount: widget.apiLimitCount,
               decoration: widget.searchDecoration,
               itemTextStyle: widget.itemTextStyle,
@@ -58,6 +65,18 @@ class _WWDropdownState extends State<WWDropdown> {
             maxHeight: widget.maxPopViewHeight,
             shape: widget.popUpShape);
       },
+      child: DecoratedBox(
+        key: key,
+        decoration: widget.decoration ?? const BoxDecoration(),
+        child: Padding(
+          padding: widget.padding ?? const EdgeInsets.all(8),
+          child: Text(
+            widget.hintText ?? widget.selectedItem?.label ?? "",
+            style:
+                widget.selectedItem != null ? widget.style : widget.hintStyle,
+          ),
+        ),
+      ),
     );
   }
 }

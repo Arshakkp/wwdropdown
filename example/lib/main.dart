@@ -112,13 +112,19 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             WWDropdown(
               api: (limit, skip, search) {
-                return Future.value([]);
+                return Future.value([
+                  WWDropdownItem(label: 'arshak', value: 1),
+                  WWDropdownItem(label: 'arshak', value: 2),
+                  WWDropdownItem(label: 'arshak', value: 3),
+                  WWDropdownItem(label: 'arshak', value: 4),
+                  WWDropdownItem(label: 'arshak', value: 5),
+                ]);
               },
               popUpShape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
               onSelect: (items) {},
-              selectedItems: [],
+              selectedItem: null,
             ),
           ],
         ),
