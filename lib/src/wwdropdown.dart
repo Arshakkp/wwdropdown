@@ -46,34 +46,44 @@ class WWDropdown extends StatefulWidget {
 class _WWDropdownState extends State<WWDropdown> {
   final GlobalKey key = GlobalKey();
   final LayerLink link = LayerLink();
+  WWDropdownItem? selectedItem;
+  void onSelect(WWDropdownItem data) {
+    selectedItem = data;
+    setState(() {});
+    widget.onSelect(data);
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         showWWDropItemOverlayApi(key,
-            child: WWOverlayViewApi(
-              api: widget.api,
-              onSelect: widget.onSelect,
-              selectedItem: widget.selectedItem,
-              apiLimitCount: widget.apiLimitCount,
-              decoration: widget.searchDecoration,
-              itemTextStyle: widget.itemTextStyle,
-            ),
+            builder: (close) => WWOverlayViewApi(
+                  api: widget.api,
+                  onClose: close,
+                  onSelect: onSelect,
+                  selectedItem: widget.selectedItem,
+                  apiLimitCount: widget.apiLimitCount,
+                  decoration: widget.searchDecoration,
+                  itemTextStyle: widget.itemTextStyle,
+                ),
             context: context,
             link: link,
             elevation: widget.elevation,
             maxHeight: widget.maxPopViewHeight,
             shape: widget.popUpShape);
       },
-      child: DecoratedBox(
-        key: key,
-        decoration: widget.decoration ?? const BoxDecoration(),
-        child: Padding(
-          padding: widget.padding ?? const EdgeInsets.all(8),
-          child: Text(
-            widget.hintText ?? widget.selectedItem?.label ?? "",
-            style:
-                widget.selectedItem != null ? widget.style : widget.hintStyle,
+      child: SizedBox(
+        width: double.infinity,
+        child: DecoratedBox(
+          key: key,
+          decoration: widget.decoration ?? const BoxDecoration(),
+          child: Padding(
+            padding: widget.padding ?? const EdgeInsets.all(8),
+            child: Text(
+              selectedItem?.label ?? widget.hintText ?? "",
+              style: selectedItem != null ? widget.style : widget.hintStyle,
+            ),
           ),
         ),
       ),

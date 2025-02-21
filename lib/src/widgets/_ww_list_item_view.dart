@@ -7,6 +7,7 @@ class WWOverlayViewApi extends StatefulWidget {
   final InputDecoration? decoration;
   final WWDropdownApi api;
   final int apiLimitCount;
+  final VoidCallback onClose;
   final TextStyle? itemTextStyle;
   final WWDropDownItemSelect onSelect;
   final WWDropdownItem? selectedItem;
@@ -16,6 +17,7 @@ class WWOverlayViewApi extends StatefulWidget {
       this.itemTextStyle,
       this.decoration,
       required this.onSelect,
+      required this.onClose,
       required this.api,
       this.apiLimitCount = 10,
       required this.selectedItem});
@@ -77,6 +79,7 @@ class _WWOverlayViewState extends State<WWOverlayViewApi> {
   void onTap(WWDropdownItem item) {
     selectedItem = item;
     setState(() {});
+    widget.onClose();
     widget.onSelect(item);
   }
 
@@ -92,7 +95,12 @@ class _WWOverlayViewState extends State<WWOverlayViewApi> {
           height: 7,
         ),
         Expanded(
-            child: ListView.builder(
+            child: ListView.separated(
+          separatorBuilder: (context, index) {
+            return const SizedBox(
+              height: 7,
+            );
+          },
           controller: _scrollController,
           itemCount: items.length,
           itemBuilder: (context, index) {
@@ -103,12 +111,6 @@ class _WWOverlayViewState extends State<WWOverlayViewApi> {
               },
               child: Row(
                 children: [
-                  Checkbox(
-                    value: item == selectedItem,
-                    onChanged: (value) {
-                      onTap(item);
-                    },
-                  ),
                   const SizedBox(
                     width: 7,
                   ),

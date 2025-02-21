@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 void showWWDropItemOverlayApi(GlobalKey key,
-    {required Widget child,
+    {required Function(VoidCallback close) builder,
     required BuildContext context,
     double maxHeight = 200,
     double elevation = 2,
@@ -12,7 +12,12 @@ void showWWDropItemOverlayApi(GlobalKey key,
   var widgetHeight = renderBox.size.height;
   var screenHeight = MediaQuery.of(context).size.height;
   var isAbove = targetPostion.dy + widgetHeight + 200 > screenHeight;
+
   late OverlayEntry overlayEntry;
+  void onClose() {
+    overlayEntry.remove();
+  }
+
   overlayEntry = OverlayEntry(
     builder: (context) {
       return Positioned(
@@ -33,7 +38,7 @@ void showWWDropItemOverlayApi(GlobalKey key,
               child: SizedBox(
                 width: renderBox.size.width,
                 height: maxHeight,
-                child: child,
+                child: builder(onClose),
               ),
             ),
           ),
