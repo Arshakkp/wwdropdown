@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:wwdropdown/src/model/ww_item.dart';
 import 'package:wwdropdown/src/utils/_type_def.dart';
 import 'package:wwdropdown/src/widgets/_ww_list_item_view.dart';

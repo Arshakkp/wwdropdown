@@ -1,3 +1,5 @@
-## 0.0.1
+## 1.0.1 - Initial Release  
+- Implemented a high-performance dropdown optimized for large datasets, loading data dynamically on demand.  
+- Added an intelligent search bar with real-time filtering for improved usability and efficiency.  
 
-* TODO: Describe initial release.
+## 1.0.2 - Bug Fixes & Enhancements

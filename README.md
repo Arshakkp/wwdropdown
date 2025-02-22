@@ -8,8 +8,6 @@ This package provides a customizable dropdown with an overlay that can load item
 
 - **API Integration**: Fetch items from an API with pagination support.
 - **Search**: Built-in search functionality with debounce support.
-- **Single/Multi-select**: Option to select a single item or multiple items from the dropdown.
-- **Keyboard Navigation**: Navigate the dropdown items using the keyboard (Arrow keys).
 - **Customizable UI**: Fully customizable text styles, decorations, and padding.
 - **Overlay**: Dropdown appears as an overlay for better UX.
 
